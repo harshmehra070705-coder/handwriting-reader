@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handwriting Reader — Free Gemini AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <div class="container">
+
+    <header>
+      <div class="badge-free">
+        <span class="badge-dot"></span>
+        100% FREE — Google Gemini AI
+      </div>
+      <h1>Handwriting &<br/>Signature Reader</h1>
+      <p class="subtitle">
+        Doctor ki prescription, kisi ka signature, haath se likha koi bhi text —<br/>
+        Google Gemini AI padh ke bilkul saaf text mein de dega
+      </p>
+    </header>
+
+    <div class="howto-banner">
+      <div class="howto-icon">💡</div>
+      <div class="howto-content">
+        <div class="howto-title">Free API Key Kaise Le? (2 minute mein)</div>
+        <div class="howto-steps">
+          <span class="hs"><span class="hn">1</span>
+            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> kholao
+          </span>
+          <span class="hs-arrow">→</span>
+          <span class="hs"><span class="hn">2</span> "Create API key" dabao</span>
+          <span class="hs-arrow">→</span>
+          <span class="hs"><span class="hn">3</span> Poori key copy karke neeche paste karo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <strong>Free API Key Lo</strong>
+          Google account se 2 minute mein milti hai — bilkul free, koi credit card nahi
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <strong>Image Upload Karo</strong>
+          Doctor prescription, signature, notes — koi bhi JPG/PNG/WEBP image
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <strong>Clear Text Paao</strong>
+          AI khud padh ke saaf readable text mein de dega — copy bhi kar sakte ho
+        </div>
+      </div>
+    </div>
+
+    <!-- API KEY SECTION — FIXED: ek hi input, poori key paste karo -->
+    <div class="card" id="apiSection">
+      <div class="card-head">
+        <div class="card-icon">🔑</div>
+        <div>
+          <div class="card-title">Step 1 — Gemini API Key Daalo</div>
+          <div class="card-sub">
+            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>
+            pe jaao → "Create API key" → poori key copy karke neeche paste karo
+          </div>
+        </div>
+      </div>
+      <div class="key-row">
+        <input
+          type="text"
+          id="apiKeyInput"
+          placeholder="AIzaSyBNhxtMNDI-Uik9Nd3U9Bp... — poori key yahan paste karo"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="btn btn-save" onclick="saveApiKey()">✓ Save Key</button>
+      </div>
+      <div id="keyStatus" class="key-status"></div>
+    </div>
+
+    <!-- UPLOAD SECTION -->
+    <div class="card" id="uploadSection">
+      <div class="card-head">
+        <div class="card-icon">📷</div>
+        <div>
+          <div class="card-title">Step 2 — Image Upload Karo</div>
+          <div class="card-sub">Click karo ya image yahan drag karke chod do</div>
+        </div>
+      </div>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <div class="dz-content">
+          <div class="dz-emoji">🖊️</div>
+          <div class="dz-title">Image Yahan Drop Karo</div>
+          <div class="dz-sub">ya click karke select karo</div>
+          <div class="dz-formats">JPG &nbsp;·&nbsp; PNG &nbsp;·&nbsp; WEBP &nbsp;·&nbsp; GIF &nbsp;·&nbsp; koi bhi size</div>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none" />
+    </div>
+
+    <!-- RESULT GRID -->
+    <div class="result-grid" id="resultGrid">
+      <div class="card img-panel">
+        <div class="panel-head">
+          <span class="panel-label">📷 Aapki Image</span>
+          <button class="btn-ghost" onclick="resetAll()">✕ Naya Upload</button>
+        </div>
+        <div class="img-body">
+          <img id="previewImg" src="" alt="Preview" />
+          <button class="btn btn-convert" id="convertBtn" onclick="convertImage()">
+            ✨ Text Convert Karo
+          </button>
+        </div>
+      </div>
+
+      <div class="card out-panel">
+        <div class="panel-head">
+          <span class="panel-label">📝 Converted Text</span>
+          <div id="statusBadge"></div>
+        </div>
+        <div class="out-body">
+          <div class="progress-track" id="progressTrack">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="output-box" id="outputBox">
+            <span class="ph-text">Image upload karo phir "Text Convert Karo" dabao...</span>
+          </div>
+          <div class="word-count" id="wordCount"></div>
+          <div id="copyWrap" style="display:none; margin-top:14px">
+            <button class="btn btn-copy btn-full" onclick="copyText()">📋 Text Copy Karo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <strong>🔒 Privacy:</strong> API key sirf aapke browser mein save hoti hai.
+      Images Google Gemini AI ko bheji jaati hain. Koi alag server nahi hai.
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
